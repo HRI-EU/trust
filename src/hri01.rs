@@ -33,7 +33,7 @@
 //
 
 use git2::Repository;
-use log::{info, error};
+use log::{error, info, warn};
 
 pub fn run() {
     info!("checking HRI01 (Push code to a Git server)");
@@ -41,10 +41,19 @@ pub fn run() {
     match Repository::open(".") {
         Ok(repo) => {
             info!("{}: Git working tree found", repo.path().to_str().unwrap());
+
+            match repo.find_remote("origin") {
+                Ok(_) => {
+                    info!("HRI01 passed ✅ (found remote named 'origin')");
+                }
+                Err(_) => {
+                    warn!("HRI01 incomplete ⏳ (please add a remote named 'origin' 😊)");
+                }
+            };
         }
         Err(e) => {
             error!("{}", e);
-            error!("[TODO] No Git information found, please ensure to use version control :)");
+            error!("HRI01 failed ❌ (please use version control 😊)");
         }
     }
 }

@@ -42,14 +42,14 @@ pub fn run() {
             let file_size = metadata.len();
 
             if file_size > 500 {
-                info!("size of README.md: {} Bytes (seems good)", metadata.len());
+                info!("HRI02 passed ✅ (README.md: {} Bytes)", metadata.len());
             } else {
-                warn!("[TODO] README.md is small, consider to expand it :)");
+                warn!("HRI01 incomplete ⏳ (README.md is small, consider to expand it 😊)");
             }
         }
         Err(e) => {
             error!("{}", e);
-            error!("README.md: No such file, or permission denied");
+            error!("HRI02 failed ❌ (README.md missing or not readable)");
         }
     }
 }

@@ -22,22 +22,24 @@ $ cargo run
 ```bash
 $ /path/to/trust
 
-2024-12-06T16:03:16.558Z INFO  [trust] 
-2024-12-06T16:03:16.558Z INFO  [trust] ████████╗██████╗ ██╗   ██╗███████╗████████╗
-2024-12-06T16:03:16.558Z INFO  [trust] ╚══██╔══╝██╔══██╗██║   ██║██╔════╝╚══██╔══╝
-2024-12-06T16:03:16.558Z INFO  [trust]    ██║   ██████╔╝██║   ██║███████╗   ██║
-2024-12-06T16:03:16.558Z INFO  [trust]    ██║   ██╔══██╗██║   ██║╚════██║   ██║
-2024-12-06T16:03:16.558Z INFO  [trust]    ██║   ██║  ██║╚██████╔╝███████║   ██║
-2024-12-06T16:03:16.558Z INFO  [trust]    ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝
-2024-12-06T16:03:16.558Z INFO  [trust] 
-2024-12-06T16:03:16.558Z INFO  [trust] 
-2024-12-06T16:03:16.558Z INFO  [trust::hri01_git_server] checking HRI01 (Push code to a Git server)
-2024-12-06T16:03:16.567Z INFO  [trust::hri01_git_server] /home/mstein/code/ToolBOSLib/.git/: Git working tree found
-2024-12-06T16:03:16.567Z INFO  [trust] 
-2024-12-06T16:03:16.567Z INFO  [trust::hri02_readme] checking HRI02 (Provide non-trivial README.md)
-2024-12-06T16:03:16.567Z INFO  [trust::hri02_readme] size of README.md: 2628 Bytes (seems good)
+2024-12-07T17:18:14.823Z INFO  [trust]
+2024-12-07T17:18:14.824Z INFO  [trust] ████████╗██████╗ ██╗   ██╗███████╗████████╗
+2024-12-07T17:18:14.824Z INFO  [trust] ╚══██╔══╝██╔══██╗██║   ██║██╔════╝╚══██╔══╝
+2024-12-07T17:18:14.824Z INFO  [trust]    ██║   ██████╔╝██║   ██║███████╗   ██║
+2024-12-07T17:18:14.824Z INFO  [trust]    ██║   ██╔══██╗██║   ██║╚════██║   ██║
+2024-12-07T17:18:14.824Z INFO  [trust]    ██║   ██║  ██║╚██████╔╝███████║   ██║
+2024-12-07T17:18:14.824Z INFO  [trust]    ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝
+2024-12-07T17:18:14.824Z INFO  [trust]
+2024-12-07T17:18:14.824Z INFO  [trust]
+2024-12-07T17:18:14.824Z INFO  [trust::hri01] checking HRI01 (Push code to a Git server)
+2024-12-07T17:18:14.831Z INFO  [trust::hri01] /home/mstein/code/trust/.git/: Git working tree found
+2024-12-07T17:18:14.831Z INFO  [trust::hri01] HRI01 passed ✅ (found remote named 'origin')
+2024-12-07T17:18:14.831Z INFO  [trust]
+2024-12-07T17:18:14.831Z INFO  [trust::hri02] checking HRI02 (Provide non-trivial README.md)
+2024-12-07T17:18:14.831Z INFO  [trust::hri02] HRI02 passed ✅ (README.md: 1942 Bytes)
 ```
 
 ### License
 
 * [BSD 3-Clause License](LICENSE)
+

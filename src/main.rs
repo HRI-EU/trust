@@ -32,8 +32,8 @@
 //
 //
 
-mod hri01_git_server;
-mod hri02_readme;
+mod hri01;
+mod hri02;
 
 use log::{info};
 use simple_logger::SimpleLogger;
@@ -43,9 +43,9 @@ fn main() {
 
     show_splash();
     info!("");
-    hri01_git_server::run();
+    hri01::run();
     info!("");
-    hri02_readme::run();
+    hri02::run();
 }
 
 fn show_splash() {
