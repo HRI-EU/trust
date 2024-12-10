@@ -38,6 +38,9 @@ mod hri02;
 use log::{info};
 use simple_logger::SimpleLogger;
 
+// Cargo passes settings from Cargo.toml as env. variable to compiler
+static TRUST_VERSION: &str = env!("CARGO_PKG_VERSION");
+
 fn main() {
     SimpleLogger::new().env().init().unwrap();
 
@@ -59,5 +62,6 @@ fn show_splash() {
     info!("   ██║   ██╔══██╗██║   ██║╚════██║   ██║");
     info!("   ██║   ██║  ██║╚██████╔╝███████║   ██║");
     info!("   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝");
+    info!("   DevSecOps Best-Practices Scanner {TRUST_VERSION}");
     info!("");
 }
