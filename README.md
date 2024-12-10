@@ -7,15 +7,20 @@ A minimal checker for DevSecOps best-practices.
 * It starts with 'T' to refer to the HRI-EU TECH Team.
 * It is written in Rust.
 * This tool is very essential, you can easily fool it by providing
-  boilerplate files it looks for. But we trust that our colleagues
-  are interested in improving their workflow rather than in fooling
-  a tool.
+  it with boilerplate files it is looking for. But we trust that our colleagues
+  are interested in improving their workflow, not fooling a tool.
 
 ## Building
 
-```bash
-$ cargo run
-```
+1. You will need the Rust toolchain, which consists of the compiler, package
+   manager, standard libraries, and so on. Install it with this command:
+   ```bash
+   $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   ```
+2. Then compile the package:
+   ```bash
+   $ cargo run
+   ```
 
 ## Execution
 
