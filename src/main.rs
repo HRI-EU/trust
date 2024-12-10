@@ -35,14 +35,21 @@
 mod hri01;
 mod hri02;
 
-use log::{info};
+use clap::Parser;
+use log::info;
 use simple_logger::SimpleLogger;
+
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {}
 
 // Cargo passes settings from Cargo.toml as env. variable to compiler
 static TRUST_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 fn main() {
     SimpleLogger::new().env().init().unwrap();
+
+    Args::parse();
 
     show_splash();
     info!("");
