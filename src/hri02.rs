@@ -34,6 +34,8 @@
 
 use log::{error, info, warn};
 
+static README_LENGTH_MIN: u64 = 500;
+
 pub fn run() {
     info!("checking HRI02 (Provide non-trivial README.md)");
 
@@ -41,7 +43,7 @@ pub fn run() {
         Ok(metadata) => {
             let file_size = metadata.len();
 
-            if file_size > 500 {
+            if file_size > README_LENGTH_MIN {
                 info!("HRI02 passed ✅ (README.md: {} Bytes)", metadata.len());
             } else {
                 warn!("HRI01 incomplete ⏳ (README.md is small, consider to expand it 😊)");
