@@ -1,5 +1,5 @@
 //
-//  Trust - A minimal checker for DevSecOps best-practices
+//  Quality Cluster HRI06 - Use CI/CD pipelines
 //
 //  Copyright (c) Honda Research Institute Europe GmbH
 //
@@ -32,55 +32,23 @@
 //
 //
 
-mod hri01;
-mod hri02;
-mod hri03;
-mod hri06;
+use log::{error, info};
+use std::fs;
 
-use clap::Parser;
-use log::info;
-use simple_logger::SimpleLogger;
+const CONFIGFILE: &'static str = ".gitlab-ci.yml";
 
-#[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
-struct Args {}
+pub fn run() {
+    info!("checking HRI06 (Use CI/CD pipelines)");
 
-// Cargo passes settings from Cargo.toml as env. variable to compiler
-static TRUST_VERSION: &str = env!("CARGO_PKG_VERSION");
-
-fn main() {
-    SimpleLogger::new().env().init().unwrap();
-
-    Args::parse();
-
-    show_splash();
-    run_checks();
+    match fs::metadata(CONFIGFILE) {
+        Ok(_) => {
+            info!("{} found", CONFIGFILE);
+            info!("HRI06 passed ✅");
+        }
+        Err(e) => {
+            error!("{}", e);
+            error!("{} not found, please use CI/CD pipelines 😊", CONFIGFILE);
+            error!("HRI06 failed ❌");
+        }
+    }
 }
-
-fn show_splash() {
-    // ASCII art created with https://budavariam.github.io/asciiart-text
-    // font: ANSI Shadow
-
-    info!("");
-    info!("████████╗██████╗ ██╗   ██╗███████╗████████╗");
-    info!("╚══██╔══╝██╔══██╗██║   ██║██╔════╝╚══██╔══╝");
-    info!("   ██║   ██████╔╝██║   ██║███████╗   ██║");
-    info!("   ██║   ██╔══██╗██║   ██║╚════██║   ██║");
-    info!("   ██║   ██║  ██║╚██████╔╝███████║   ██║");
-    info!("   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝");
-    info!("   DevSecOps Best-Practices Scanner {TRUST_VERSION}");
-    info!("");
-}
-
-
-fn run_checks() {
-    info!("");
-    hri01::run();
-    info!("");
-    hri02::run();
-    info!("");
-    hri03::run();
-    info!("");
-    hri06::run();
-}
-
