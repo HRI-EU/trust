@@ -44,16 +44,19 @@ pub fn run() {
 
             match repo.find_remote("origin") {
                 Ok(_) => {
-                    info!("HRI01 passed ✅ (found remote named 'origin')");
+                    info!("found remote named 'origin'");
+                    info!("HRI01 passed ✅");
                 }
                 Err(_) => {
-                    warn!("HRI01 incomplete ⏳ (please add a remote named 'origin' 😊)");
+                    warn!("no remote named 'origin', please add it 😊");
+                    warn!("HRI01 incomplete ⏳");
                 }
             };
         }
         Err(e) => {
             error!("{}", e);
-            error!("HRI01 failed ❌ (please use version control 😊)");
+            error!("no Git info found, please use version control 😊");
+            error!("HRI01 failed ❌");
         }
     }
 }

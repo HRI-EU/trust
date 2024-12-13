@@ -44,14 +44,17 @@ pub fn run() {
             let file_size = metadata.len();
 
             if file_size > README_LENGTH_MIN {
-                info!("HRI02 passed ✅ (README.md: {} Bytes)", metadata.len());
+                info!("README.md: {} Bytes", metadata.len());
+                info!("HRI02 passed ✅");
             } else {
-                warn!("HRI01 incomplete ⏳ (README.md is small, consider to expand it 😊)");
+                warn!("README.md is small, consider to expand it 😊");
+                warn!("HRI01 incomplete ⏳");
             }
         }
         Err(e) => {
             error!("{}", e);
-            error!("HRI02 failed ❌ (README.md missing or not readable)");
+            error!("README.md missing or not readable");
+            error!("HRI02 failed ❌");
         }
     }
 }

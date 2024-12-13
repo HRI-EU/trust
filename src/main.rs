@@ -34,6 +34,7 @@
 
 mod hri01;
 mod hri02;
+mod hri03;
 
 use clap::Parser;
 use log::info;
@@ -52,10 +53,7 @@ fn main() {
     Args::parse();
 
     show_splash();
-    info!("");
-    hri01::run();
-    info!("");
-    hri02::run();
+    run_checks();
 }
 
 fn show_splash() {
@@ -72,3 +70,14 @@ fn show_splash() {
     info!("   DevSecOps Best-Practices Scanner {TRUST_VERSION}");
     info!("");
 }
+
+
+fn run_checks() {
+    info!("");
+    hri01::run();
+    info!("");
+    hri02::run();
+    info!("");
+    hri03::run();
+}
+
