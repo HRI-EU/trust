@@ -35,7 +35,13 @@
 mod hri01;
 mod hri02;
 mod hri03;
+mod hri04;
+mod hri05;
 mod hri06;
+mod hri07;
+mod hri08;
+mod hri09;
+mod hri10;
 
 use clap::Parser;
 use log::info;
@@ -46,7 +52,7 @@ use simple_logger::SimpleLogger;
 struct Args {}
 
 // Cargo passes settings from Cargo.toml as env. variable to compiler
-static TRUST_VERSION: &str = env!("CARGO_PKG_VERSION");
+const TRUST_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 fn main() {
     SimpleLogger::new().env().init().unwrap();
@@ -81,6 +87,18 @@ fn run_checks() {
     info!("");
     hri03::run();
     info!("");
+    hri04::run();
+    info!("");
+    hri05::run();
+    info!("");
     hri06::run();
+    info!("");
+    hri07::run();
+    info!("");
+    hri08::run();
+    info!("");
+    hri09::run();
+    info!("");
+    hri10::run();
 }
 
