@@ -33,10 +33,11 @@
 //
 
 use log::{error, info, warn};
+use crate::CheckStatus;
 
 static README_LENGTH_MIN: u64 = 500;
 
-pub fn run() {
+pub fn run() -> CheckStatus {
     info!("checking HRI02 (Provide non-trivial README.md)");
 
     match std::fs::metadata("README.md") {
@@ -46,15 +47,18 @@ pub fn run() {
             if file_size > README_LENGTH_MIN {
                 info!("README.md: {} Bytes", metadata.len());
                 info!("HRI02 passed ✅");
+                CheckStatus::Success
             } else {
                 warn!("README.md is small, consider to expand it 😊");
-                warn!("HRI01 incomplete ⏳");
+                warn!("HRI02 incomplete ⏳");
+                CheckStatus::Incomplete
             }
         }
         Err(e) => {
             error!("{}", e);
             error!("README.md missing or not readable");
             error!("HRI02 failed ❌");
+            CheckStatus::Failure
         }
     }
 }

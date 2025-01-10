@@ -34,8 +34,9 @@
 
 use git2::Repository;
 use log::{error, info, warn};
+use crate::CheckStatus;
 
-pub fn run() {
+pub fn run() -> CheckStatus {
     info!("checking HRI01 (Push code to a Git server)");
 
     match Repository::open(".") {
@@ -46,17 +47,20 @@ pub fn run() {
                 Ok(_) => {
                     info!("found remote named 'origin'");
                     info!("HRI01 passed ✅");
+                    CheckStatus::Success
                 }
                 Err(_) => {
                     warn!("no remote named 'origin', please add it 😊");
                     warn!("HRI01 incomplete ⏳");
+                    CheckStatus::Incomplete
                 }
-            };
+            }
         }
         Err(e) => {
             error!("{}", e);
             error!("no Git info found, please use version control 😊");
             error!("HRI01 failed ❌");
+            CheckStatus::Failure
         }
     }
 }

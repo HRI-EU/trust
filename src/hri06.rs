@@ -34,21 +34,24 @@
 
 use log::{error, info};
 use std::fs;
+use crate::CheckStatus;
 
 const CONFIGFILE: &'static str = ".gitlab-ci.yml";
 
-pub fn run() {
+pub fn run() -> CheckStatus {
     info!("checking HRI06 (Use CI/CD pipelines)");
 
     match fs::metadata(CONFIGFILE) {
         Ok(_) => {
             info!("{} found", CONFIGFILE);
             info!("HRI06 passed ✅");
+            CheckStatus::Success
         }
         Err(e) => {
             error!("{}", e);
-            error!("{} not found, please use CI/CD pipelines 😊", CONFIGFILE);
+            error!("{} not found, please use CI/CD pipelines", CONFIGFILE);
             error!("HRI06 failed ❌");
+            CheckStatus::Failure
         }
     }
 }

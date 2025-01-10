@@ -32,10 +32,12 @@
 //
 //
 
-use log::{info, warn};
+use log::info;
+use crate::CheckStatus;
 
-pub fn run() {
+pub fn run() -> CheckStatus {
     info!("checking HRI09 (Separation of 3rd-party material)");
 
-    warn!("not yet implemented ⏳");
+    info!("HRI09 not implemented");
+    CheckStatus::NotImplemented
 }

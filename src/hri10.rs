@@ -32,10 +32,44 @@
 //
 //
 
-use log::{info, warn};
+use crate::CheckStatus;
+use log::{error, info};
 
-pub fn run() {
-    info!("checking HRI10 (Obey HRI01-HRI-09 😉)");
+pub fn run(results: &[CheckStatus]) {
+    info!("checking HRI10 (Obey HRI01-HRI-09 ;)");
 
-    warn!("not yet implemented ⏳");
+    let mut success = false;
+
+    for i in 0..results.len() {
+        let id = i + 1;
+        match results[i] {
+            CheckStatus::Success => {
+                info!("recap: HRI{id:02} passed ✅");
+            }
+            CheckStatus::Incomplete => {
+                info!("recap: HRI{id:02} incomplete ⏳");
+                success = false;
+            }
+            CheckStatus::Failure => {
+                info!("recap: HRI{id:02} failed ❌");
+                success = false;
+            }
+            CheckStatus::NotApplicable => {
+                info!("recap: HRI{id:02} not applicable");
+            }
+            CheckStatus::NotImplemented => {
+                info!("recap: HRI{id:02} not implemented");
+            }
+        }
+    }
+
+    match success
+    {
+        true => {
+            info!("hence: HRI10 passed ✅");
+        }
+        false => {
+            error!("hence: HRI10 failed ❌");
+        }
+    }
 }

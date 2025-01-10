@@ -32,10 +32,12 @@
 //
 //
 
-use log::{info, warn};
+use log::info;
+use crate::CheckStatus;
 
-pub fn run() {
+pub fn run() -> CheckStatus{
     info!("checking HRI04 (Strive for codestyle-consistency)");
 
-    warn!("not yet implemented ⏳");
+    info!("HRI04 not implemented");
+    CheckStatus::NotImplemented
 }

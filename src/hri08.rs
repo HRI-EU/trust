@@ -32,10 +32,12 @@
 //
 //
 
-use log::{info, warn};
+use log::info;
+use crate::CheckStatus;
 
-pub fn run() {
+pub fn run() -> CheckStatus {
     info!("checking HRI08 (License compliance)");
 
-    warn!("not yet implemented ⏳");
+    info!("HRI08 not implemented");
+    CheckStatus::NotImplemented
 }

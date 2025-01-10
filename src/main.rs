@@ -54,6 +54,16 @@ struct Args {}
 // Cargo passes settings from Cargo.toml as env. variable to compiler
 const TRUST_VERSION: &str = env!("CARGO_PKG_VERSION");
 
+#[derive(Copy)]
+#[derive(Clone)]
+enum CheckStatus {
+    Success,
+    Incomplete,
+    Failure,
+    NotApplicable,
+    NotImplemented,
+}
+
 fn main() {
     SimpleLogger::new().env().init().unwrap();
 
@@ -80,25 +90,27 @@ fn show_splash() {
 
 
 fn run_checks() {
+    let mut results: [CheckStatus; 9] = [ CheckStatus::NotApplicable; 9 ];
+
     info!("");
-    hri01::run();
+    results[0] = hri01::run();
     info!("");
-    hri02::run();
+    results[1] = hri02::run();
     info!("");
-    hri03::run();
+    results[2] = hri03::run();
     info!("");
-    hri04::run();
+    results[3] = hri04::run();
     info!("");
-    hri05::run();
+    results[4] = hri05::run();
     info!("");
-    hri06::run();
+    results[5] = hri06::run();
     info!("");
-    hri07::run();
+    results[6] = hri07::run();
     info!("");
-    hri08::run();
+    results[7] = hri08::run();
     info!("");
-    hri09::run();
+    results[8] = hri09::run();
     info!("");
-    hri10::run();
+    hri10::run( &results );
 }
 

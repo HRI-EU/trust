@@ -32,6 +32,7 @@
 //
 //
 
+use crate::CheckStatus;
 use log::{error, info, warn};
 use std::fs;
 use std::str;
@@ -41,17 +42,27 @@ const FILE_EXTENSIONS: [&'static str; 15] = [
     "bash", "c", "cpp", "go", "h", "hpp", "hxx", "inc", "js", "m", "py", "rs", "sh", "ts", "tsx",
 ];
 
-pub fn run() {
+pub fn run() -> CheckStatus {
     info!("checking HRI03 (Mind copyright headers)");
 
-    match worker("src") {
-        true => info!("HRI03 passed ✅"),
-        false => error!("HRI03 failed ❌"),
+    let status = worker("src");
+
+    match status {
+        CheckStatus::Success => { info!("HRI03 passed ✅") }
+        CheckStatus::Incomplete => { warn!("HRI03 incomplete ⏳") }
+        CheckStatus::Failure => { error!("HRI03 failed ❌") }
+        CheckStatus::NotApplicable => { info!("HRI03 not applicable") }
+        
+        // should not happen
+        CheckStatus::NotImplemented => { info!("HRI03 not implemented") }
     }
+
+    status
 }
 
-fn worker(path: &str) -> bool {
-    let mut overall_result: bool = true;
+fn worker(path: &str) -> CheckStatus {
+    let mut found_good = false;
+    let mut found_bad = false;
 
     match fs::metadata(path) {
         Ok(_) => {
@@ -62,19 +73,30 @@ fn worker(path: &str) -> bool {
                 .filter_map(|v| v.ok())
                 .for_each(|e| {
                     if e.file_type().is_file() {
-                        let file_result = process_file(&e);
-                        if file_result == false {
-                            overall_result = false;
+                        match process_file(&e) {
+                            // If at least one single file was successful, the directory containing
+                            // it is already "Incomplete", which is better than nothing.
+                            true => found_good = true,
+
+                            // If there's just one file that failed, the directory will be
+                            // marked as "Incomplete"
+                            false => found_bad = true,
                         }
                     }
                 });
 
-            overall_result
+            if !found_bad {
+                CheckStatus::Success
+            } else if !found_good {
+                CheckStatus::Failure
+            } else {
+                CheckStatus::Incomplete
+            }
         }
         Err(e) => {
             error!("{}", e);
             error!("'src' subdirectory missing or not readable");
-            false
+            CheckStatus::NotApplicable
         }
     }
 }
@@ -114,8 +136,7 @@ fn process_file(entry: &DirEntry) -> bool {
             if c_low.contains("copyright") || c_low.contains("(c)") || c_low.contains("©") {
                 info!("copyright header found in: {}", path.display());
                 true
-            }
-            else {
+            } else {
                 warn!("copyright header missing: {}", path.display());
                 false
             }

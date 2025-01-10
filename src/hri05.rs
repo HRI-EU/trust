@@ -32,10 +32,12 @@
 //
 //
 
-use log::{info, warn};
+use log::info;
+use crate::CheckStatus;
 
-pub fn run() {
+pub fn run() -> CheckStatus {
     info!("checking HRI05 (Use static source-code analyzers)");
 
-    warn!("not yet implemented ⏳");
+    info!("HRI05 not implemented");
+    CheckStatus::NotImplemented
 }

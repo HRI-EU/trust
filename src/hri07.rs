@@ -32,10 +32,12 @@
 //
 //
 
-use log::{info, warn};
+use log::info;
+use crate::CheckStatus;
 
-pub fn run() {
+pub fn run() -> CheckStatus {
     info!("checking HRI07 (Use security-components)");
 
-    warn!("not yet implemented ⏳");
+    info!("HRI07 not implemented");
+    CheckStatus::NotImplemented
 }
