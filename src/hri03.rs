@@ -132,14 +132,21 @@ fn process_file(entry: &DirEntry) -> bool {
     match fs::read_to_string(path) {
         Ok(content) => {
             let c_low = content.to_lowercase();
+            let header_found = c_low.contains("copyright") || c_low.contains("(c)") || c_low.contains("©");
 
-            if c_low.contains("copyright") || c_low.contains("(c)") || c_low.contains("©") {
-                info!("copyright header found in: {}", path.display());
-                true
+            let spdx_found = content.contains( "SPDX-License-Identifier:" );
+
+            if header_found && spdx_found {
+                info!("copyright header and SPDX info found: {}", path.display());
+            } else if header_found {
+                warn!("copyright header found, SPDX missing: {}", path.display());
+            } else if spdx_found {
+                warn!("copyright header missing, SPDX found: {}", path.display());
             } else {
-                warn!("copyright header missing: {}", path.display());
-                false
+                error!("copyright header and SPDX ID missing: {}", path.display());
             }
+
+            header_found && spdx_found
         }
         Err(e) => {
             error!("{}", e);
