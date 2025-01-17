@@ -45,21 +45,21 @@ pub fn run(results: &[CheckStatus]) {
         let id = i + 1;
         match results[i] {
             CheckStatus::Success => {
-                info!("recap: HRI{id:02} passed ✅");
+                info!("summary: HRI{id:02} passed ✅");
             }
             CheckStatus::Incomplete => {
-                info!("recap: HRI{id:02} incomplete ⏳");
+                info!("summary: HRI{id:02} incomplete ⏳");
                 success = false;
             }
             CheckStatus::Failure => {
-                info!("recap: HRI{id:02} failed ❌");
+                info!("summary: HRI{id:02} failed ❌");
                 success = false;
             }
             CheckStatus::NotApplicable => {
-                info!("recap: HRI{id:02} not applicable");
+                info!("summary: HRI{id:02} not applicable");
             }
             CheckStatus::NotImplemented => {
-                info!("recap: HRI{id:02} not implemented");
+                info!("summary: HRI{id:02} not implemented");
             }
         }
     }
@@ -67,10 +67,10 @@ pub fn run(results: &[CheckStatus]) {
     match success
     {
         true => {
-            info!("hence: HRI10 passed ✅");
+            info!("summary: HRI10 passed ✅");
         }
         false => {
-            error!("hence: HRI10 failed ❌");
+            error!("summary: HRI10 failed ❌");
         }
     }
 }
