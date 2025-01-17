@@ -34,7 +34,7 @@
 //
 
 use crate::CheckStatus;
-use log::{error, info, warn};
+use log::{debug, error, info, warn};
 use std::fs;
 use std::str;
 use walkdir::{DirEntry, WalkDir};
@@ -49,13 +49,23 @@ pub fn run() -> CheckStatus {
     let status = worker("src");
 
     match status {
-        CheckStatus::Success => { info!("HRI03 passed ✅") }
-        CheckStatus::Incomplete => { warn!("HRI03 incomplete ⏳") }
-        CheckStatus::Failure => { error!("HRI03 failed ❌") }
-        CheckStatus::NotApplicable => { info!("HRI03 not applicable") }
-        
+        CheckStatus::Success => {
+            info!("HRI03 passed ✅")
+        }
+        CheckStatus::Incomplete => {
+            warn!("HRI03 incomplete ⏳")
+        }
+        CheckStatus::Failure => {
+            error!("HRI03 failed ❌")
+        }
+        CheckStatus::NotApplicable => {
+            info!("HRI03 not applicable")
+        }
+
         // should not happen
-        CheckStatus::NotImplemented => { info!("HRI03 not implemented") }
+        CheckStatus::NotImplemented => {
+            info!("HRI03 not implemented")
+        }
     }
 
     status
@@ -67,7 +77,7 @@ fn worker(path: &str) -> CheckStatus {
 
     match fs::metadata(path) {
         Ok(_) => {
-            WalkDir::new("src")
+            WalkDir::new(path)
                 .sort_by_file_name()
                 .into_iter()
                 .filter_entry(|e| is_of_interest(&e))
@@ -84,6 +94,10 @@ fn worker(path: &str) -> CheckStatus {
                             false => found_bad = true,
                         }
                     }
+                    if e.file_type().is_dir() {
+                        let path = e.path().display().to_string();
+                        debug!("Entering subdirectory: {path}")
+                    }
                 });
 
             if !found_bad {
@@ -96,14 +110,26 @@ fn worker(path: &str) -> CheckStatus {
         }
         Err(e) => {
             error!("{}", e);
-            error!("'src' subdirectory missing or not readable");
+            error!("'{path}' subdirectory missing or not readable");
             CheckStatus::NotApplicable
         }
     }
 }
 
 fn is_of_interest(entry: &DirEntry) -> bool {
-    is_not_hidden(entry) && has_source_ext(entry)
+    // We skip hidden files and directories (starting with ".").
+    // For files, we also only consider known file extensions.
+    // Everything else, such as symlinks, is ignored.
+
+    let ft = entry.file_type();
+
+    if ft.is_dir() {
+        is_not_hidden(entry)
+    } else if ft.is_file() {
+        is_not_hidden(entry) && has_source_ext(entry)
+    } else {
+        false
+    }
 }
 
 /* from https://rust-lang-nursery.github.io/rust-cookbook/file/dir.html
@@ -133,9 +159,10 @@ fn process_file(entry: &DirEntry) -> bool {
     match fs::read_to_string(path) {
         Ok(content) => {
             let c_low = content.to_lowercase();
-            let header_found = c_low.contains("copyright") || c_low.contains("(c)") || c_low.contains("©");
+            let header_found =
+                c_low.contains("copyright") || c_low.contains("(c)") || c_low.contains("©");
 
-            let spdx_found = content.contains( "SPDX-License-Identifier:" );
+            let spdx_found = content.contains("SPDX-License-Identifier:");
 
             if header_found && spdx_found {
                 info!("copyright header and SPDX info found: {}", path.display());
