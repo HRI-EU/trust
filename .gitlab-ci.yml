@@ -1,0 +1,20 @@
+#
+#  GitLab CI/CD configuration
+#
+#  Copyright (C)
+#  Honda Research Institute Europe GmbH
+#  Carl-Legien-Str. 30
+#  63073 Offenbach/Main
+#  Germany
+#
+#  UNPUBLISHED PROPRIETARY MATERIAL.
+#  ALL RIGHTS RESERVED.
+#
+#
+
+
+include:
+  - component: $CI_SERVER_FQDN/tech_team/ci/secrets-detection/secrets-detection@~latest
+
+
+# EOF
