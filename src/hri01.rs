@@ -1,7 +1,7 @@
 //
 //  Quality Cluster HRI01 - Push code to a Git server
 //
-//  Copyright (c) Honda Research Institute Europe GmbH
+//  Copyright (c) 2024-2025, Honda Research Institute Europe GmbH
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are
