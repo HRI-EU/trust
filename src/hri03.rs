@@ -40,7 +40,8 @@ use std::str;
 use walkdir::{DirEntry, WalkDir};
 
 const FILE_EXTENSIONS: [&'static str; 15] = [
-    "bash", "c", "cpp", "go", "h", "hpp", "hxx", "inc", "js", "m", "py", "rs", "sh", "ts", "tsx",
+    ".bash", ".c", ".cpp", ".go", ".h", ".hpp", ".hxx", ".inc", ".js", ".m", ".py", ".rs", ".sh",
+    ".ts", ".tsx",
 ];
 
 pub fn run() -> CheckStatus {
