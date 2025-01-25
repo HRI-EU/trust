@@ -1,5 +1,5 @@
 //
-//  Quality Cluster HRI09 - Separation of 3rd-party material
+//  Quality Cluster HRI09 - Use a modern build / packaging system
 //
 //  Copyright (c) 2024-2025, Honda Research Institute Europe GmbH
 //
@@ -33,12 +33,130 @@
 //  SPDX-License-Identifier: BSD-3-Clause
 //
 
-use log::info;
 use crate::CheckStatus;
+use log::{error, info, warn};
+use std::fs;
+
+const CONANFILE_PY: &'static str = "conanfile.py";
+const CONANFILE_TXT: &'static str = "conanfile.txt";
+const CONAN_LOCK: &'static str = "conan.lock";
+
+const CARGO_TOML: &'static str = "Cargo.toml";
+const CARGO_LOCK: &'static str = "Cargo.lock";
+
+const UV_TOML: &'static str = "uv.toml";
+const PYPROJECT_TOML: &'static str = "pyproject.toml";
+const UV_LOCK: &'static str = "uv.lock";
 
 pub fn run() -> CheckStatus {
-    info!("checking HRI09 (Separation of 3rd-party material)");
+    info!("checking HRI09 (Use modern build/packaging system)");
 
-    info!("HRI09 not implemented");
-    CheckStatus::NotImplemented
+    let mut results: [CheckStatus; 3] = [CheckStatus::NotApplicable; 3];
+
+    results[0] = have_conan();
+    results[1] = have_cargo();
+    results[2] = have_uv();
+
+    let mut incomplete = false;
+
+    for i in 0..results.len() {
+        match results[i] {
+            CheckStatus::Success => {
+                info!("HRI09 passed ✅");
+                return CheckStatus::Success
+            }
+            CheckStatus::Incomplete => {
+                incomplete = true;
+            }
+            _ => {}
+        }
+    }
+
+    match incomplete
+    {
+        true => {
+            warn!("HRI09 incomplete ⏳");
+            CheckStatus::Incomplete
+    }
+        false => {
+            error!("none found");
+            error!("HRI09 failed ❌");
+            CheckStatus::Failure
+        }
+    }
+}
+
+fn have_conan() -> CheckStatus {
+    let conanfile_py = file_exists(CONANFILE_PY);
+    let conanfile_txt = file_exists(CONANFILE_TXT);
+    let conan_lock = file_exists(CONAN_LOCK);
+
+    if conanfile_py {
+        info!("found {}", CONANFILE_PY);
+    }
+    if conanfile_txt {
+        info!("found {}", CONANFILE_TXT);
+    }
+    if conan_lock {
+        info!("found {}", CONAN_LOCK);
+    }
+
+    if conanfile_py || conanfile_txt {
+        if conan_lock {
+            return CheckStatus::Success;
+        }
+        return CheckStatus::Incomplete;
+    }
+
+    CheckStatus::Failure
+}
+
+fn have_cargo() -> CheckStatus {
+    let cargo_toml = file_exists(CARGO_TOML);
+    let cargo_lock = file_exists(CARGO_LOCK);
+
+    if cargo_toml {
+        info!("found {}", CARGO_TOML);
+    }
+    if cargo_lock {
+        info!("found {}", CARGO_LOCK);
+    }
+
+    if cargo_toml {
+        if cargo_lock {
+            return CheckStatus::Success;
+        }
+        return CheckStatus::Incomplete;
+    }
+
+    CheckStatus::Failure
+}
+
+fn have_uv() -> CheckStatus {
+    let uv_toml = file_exists(UV_TOML);
+    let pyproject_toml = file_exists(PYPROJECT_TOML);
+    let uv_lock = file_exists(UV_LOCK);
+
+    if uv_toml {
+        info!("found {}", UV_TOML);
+    }
+    if pyproject_toml {
+        info!("found {}", PYPROJECT_TOML);
+    }
+    if uv_lock {
+        info!("found {}", UV_LOCK);
+    }
+
+    if uv_toml || pyproject_toml {
+        if uv_lock {
+            return CheckStatus::Success;
+        }
+        return CheckStatus::Incomplete;
+    }
+
+    CheckStatus::Failure
+}
+
+fn file_exists(path: &str) -> bool {
+    fs::metadata(path).is_ok()
 }
