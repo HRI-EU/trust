@@ -44,12 +44,11 @@ pub fn run() -> CheckStatus {
 
     match fs::metadata(CONFIGFILE) {
         Ok(_) => {
-            info!("{} found", CONFIGFILE);
+            info!("GitLab CI/CD pipeline found: {}", CONFIGFILE);
             info!("HRI06 passed ✅");
             CheckStatus::Success
         }
-        Err(e) => {
-            error!("{}", e);
+        Err(_) => {
             error!("{} not found, please use CI/CD pipelines", CONFIGFILE);
             error!("HRI06 failed ❌");
             CheckStatus::Failure

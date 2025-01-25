@@ -59,6 +59,7 @@ user@host:~/code/ToolBOSLib $ trust
 2024-12-07T17:18:14.831Z INFO  [trust]
 2024-12-07T17:18:14.831Z INFO  [trust::hri02] checking HRI02 (Provide non-trivial README.md)
 2024-12-07T17:18:14.831Z INFO  [trust::hri02] HRI02 passed ✅ (README.md: 1942 Bytes)
+[...]
 ```
 
 ## Author(s)

@@ -34,7 +34,7 @@
 //
 
 use crate::CheckStatus;
-use log::{debug, error, info, warn};
+use log::{error, info, warn};
 use std::fs;
 use std::str;
 use walkdir::{DirEntry, WalkDir};
@@ -94,10 +94,6 @@ fn worker(path: &str) -> CheckStatus {
                             false => found_bad = true,
                         }
                     }
-                    if e.file_type().is_dir() {
-                        let path = e.path().display().to_string();
-                        debug!("Entering subdirectory: {path}")
-                    }
                 });
 
             if !found_bad {
@@ -154,7 +150,6 @@ fn has_source_ext(entry: &DirEntry) -> bool {
 
 fn process_file(entry: &DirEntry) -> bool {
     let path = entry.path();
-    // debug!("processing file: {}", path.display());
 
     match fs::read_to_string(path) {
         Ok(content) => {

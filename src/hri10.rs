@@ -37,9 +37,9 @@ use crate::CheckStatus;
 use log::{error, info};
 
 pub fn run(results: &[CheckStatus]) {
-    info!("checking HRI10 (Obey HRI01-HRI-09 ;)");
+    info!("checking HRI10 (Obey HRI01-HRI-09 😊)");
 
-    let mut success = false;
+    let mut success = true;
 
     for i in 0..results.len() {
         let id = i + 1;
@@ -66,11 +66,7 @@ pub fn run(results: &[CheckStatus]) {
 
     match success
     {
-        true => {
-            info!("summary: HRI10 passed ✅");
-        }
-        false => {
-            error!("summary: HRI10 failed ❌");
-        }
+        true => info!("summary: HRI10 passed ✅"),
+        false => error!("summary: HRI10 failed ❌")
     }
 }
