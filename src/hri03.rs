@@ -74,6 +74,7 @@ pub fn run() -> CheckStatus {
 
 fn worker(path: &str) -> CheckStatus {
     let mut found_good = false;
+    let mut found_incomplete = false;
     let mut found_bad = false;
 
     match fs::metadata(path) {
@@ -86,20 +87,17 @@ fn worker(path: &str) -> CheckStatus {
                 .for_each(|e| {
                     if e.file_type().is_file() {
                         match process_file(&e) {
-                            // If at least one single file was successful, the directory containing
-                            // it is already "Incomplete", which is better than nothing.
-                            true => found_good = true,
-
-                            // If there's just one file that failed, the directory will be
-                            // marked as "Incomplete"
-                            false => found_bad = true,
+                            CheckStatus::Success => found_good = true,
+                            CheckStatus::Incomplete => found_incomplete = true,
+                            CheckStatus::Failure => found_bad = true,
+                            _ => {}
                         }
                     }
                 });
 
-            if !found_bad {
+            if !found_bad && !found_incomplete {
                 CheckStatus::Success
-            } else if !found_good {
+            } else if !found_good && !found_incomplete {
                 CheckStatus::Failure
             } else {
                 CheckStatus::Incomplete
@@ -149,7 +147,7 @@ fn has_source_ext(entry: &DirEntry) -> bool {
     false
 }
 
-fn process_file(entry: &DirEntry) -> bool {
+fn process_file(entry: &DirEntry) -> CheckStatus {
     let path = entry.path();
 
     match fs::read_to_string(path) {
@@ -161,21 +159,23 @@ fn process_file(entry: &DirEntry) -> bool {
             let spdx_found = content.contains("SPDX-License-Identifier:");
 
             if header_found && spdx_found {
-                info!("copyright header and SPDX info found: {}", path.display());
+                info!("copyright and SPDX info found: {}", path.display());
+                CheckStatus::Success
             } else if header_found {
-                warn!("copyright header found, SPDX missing: {}", path.display());
+                warn!("copyright found, SPDX missing: {}", path.display());
+                CheckStatus::Incomplete
             } else if spdx_found {
-                warn!("copyright header missing, SPDX found: {}", path.display());
+                warn!("copyright missing, SPDX found: {}", path.display());
+                CheckStatus::Incomplete
             } else {
-                error!("copyright header and SPDX ID missing: {}", path.display());
+                error!("copyright and SPDX ID missing: {}", path.display());
+                CheckStatus::Failure
             }
-
-            header_found && spdx_found
         }
         Err(e) => {
             error!("{}", e);
             error!("file not readable: {}", path.display());
-            false
+            CheckStatus::Failure
         }
     }
 }
