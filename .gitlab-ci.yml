@@ -36,6 +36,7 @@
 
 
 include:
+  - component: $CI_SERVER_FQDN/tech_team/ci/autocompliance/autocompliance@~latest
   - component: $CI_SERVER_FQDN/tech_team/ci/secrets-detection/secrets-detection@~latest
 
 
