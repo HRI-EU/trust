@@ -14,16 +14,16 @@ A minimal checker for DevSecOps best-practices.
 
 ## Checked objectives
 
-* HRI01 - Push code to a Git server
-* HRI02 - Provide non-trivial README.md
-* HRI03 - Mind copyright headers
+* [HRI01](doc/HRI01.md) - Push code to a Git server
+* [HRI02](doc/HRI02.md) - Provide non-trivial README.md
+* [HRI03](doc/HRI03.md) - Put copyright headers and license file(s)
 * HRI04 - Strive for codestyle consistency
 * HRI05 - Use state-of-art source-code analyzers
-* HRI06 - Use CI/CD pipelines
-* HRI07 - Enable security-enhancing CI/CD components
-* HRI08 - License compliance
-* HRI09 - Use a modern build / packaging system
-* HRI10 - Obey HRI01-HRI-09 😊
+* [HRI06](doc/HRI06.md) - Use CI/CD pipelines
+* [HRI07](doc/HRI07.md) - Enable security-enhancing CI/CD components
+* [HRI08](doc/HRI08.md) - License compliance
+* [HRI09](doc/HRI09.md) - Use a modern build / packaging system
+* [HRI10](doc/HRI10.md) - Obey HRI01-HRI-09 😊
 
 ## Building from source
 

@@ -1,5 +1,5 @@
 //
-//  Quality Cluster HRI03 - Mind copyright headers
+//  Quality Cluster HRI03 - Put copyright headers and license file(s)
 //
 //  Copyright (c) 2024-2025, Honda Research Institute Europe GmbH
 //
@@ -45,7 +45,7 @@ const FILE_EXTENSIONS: [&'static str; 15] = [
 ];
 
 pub fn run() -> CheckStatus {
-    info!("checking HRI03 (Mind copyright headers)");
+    info!("checking HRI03 (Put copyright headers and license files)");
 
     let status = worker("src");
 
