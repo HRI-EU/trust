@@ -17,8 +17,8 @@ A minimal checker for DevSecOps best-practices.
 * [HRI01](doc/HRI01.md) - Push code to a Git server
 * [HRI02](doc/HRI02.md) - Provide non-trivial README.md
 * [HRI03](doc/HRI03.md) - Put copyright headers and license file(s)
-* HRI04 - Strive for codestyle consistency
-* HRI05 - Use state-of-art source-code analyzers
+* [HRI04](doc/HRI04.md) - Strive for codestyle consistency
+* [HRI05](doc/HRI05.md) - Use state-of-art source-code analyzers
 * [HRI06](doc/HRI06.md) - Use CI/CD pipelines
 * [HRI07](doc/HRI07.md) - Enable security-enhancing CI/CD components
 * [HRI08](doc/HRI08.md) - License compliance
@@ -35,15 +35,9 @@ A minimal checker for DevSecOps best-practices.
 2. Then compile and launch the package:
    ```bash
    $ cargo run --release
-   ```
-   ```
-   Compiling proc-macro2 v1.0.92
-   Compiling unicode-ident v1.0.14
-   Compiling libc v0.2.167
-   Compiling shlex v1.3.0
    [...]
-   Compiling trust v0.1.0 (/home/mstein/code/trust)
-   Finished `release` profile [optimized] target(s) in 0.04s
+   Compiling trust v0.9.0 (/home/mstein/code/trust)
+   Finished `release` profile [optimized] target(s) in 0.21s
    ```
    The final executable is: `./target/release/trust`.
 
@@ -64,7 +58,7 @@ user@host:~/code/GitLabAdmin$ ~/code/trust/target/release/trust
 2025-01-25T21:15:18.660Z INFO  [trust]    ██║   ██╔══██╗██║   ██║╚════██║   ██║
 2025-01-25T21:15:18.660Z INFO  [trust]    ██║   ██║  ██║╚██████╔╝███████║   ██║
 2025-01-25T21:15:18.660Z INFO  [trust]    ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝
-2025-01-25T21:15:18.660Z INFO  [trust]    DevSecOps Best-Practices Scanner 0.2.0
+2025-01-25T21:15:18.660Z INFO  [trust]    DevSecOps Best-Practices Scanner 0.9.0
 2025-01-25T21:15:18.660Z INFO  [trust]
 2025-01-25T21:15:18.660Z INFO  [trust]
 2025-01-25T21:15:18.660Z INFO  [trust::hri01] checking HRI01 (Push code to a Git server)
@@ -76,7 +70,7 @@ user@host:~/code/GitLabAdmin$ ~/code/trust/target/release/trust
 2025-01-25T21:15:18.666Z INFO  [trust::hri02] README.md: 2664 Bytes
 2025-01-25T21:15:18.666Z INFO  [trust::hri02] HRI02 passed ✅
 2025-01-25T21:15:18.666Z INFO  [trust]
-2025-01-25T21:15:18.666Z INFO  [trust::hri03] checking HRI03 (Mind copyright headers)
+2025-01-25T21:15:18.666Z INFO  [trust::hri03] checking HRI03 (checking HRI03 (Put copyright headers and license files)
 [...]
 ```
 
