@@ -1,5 +1,5 @@
 //
-//  Quality Cluster HRI05 - Use state-of-art source-code analyzers
+//  Quality Cluster HRI05 - Use static source-code analyzers
 //
 //  Copyright (c) 2024-2025, Honda Research Institute Europe GmbH
 //
@@ -33,12 +33,86 @@
 //  SPDX-License-Identifier: BSD-3-Clause
 //
 
-use log::info;
 use crate::CheckStatus;
+use log::{error, info, warn};
+use std::fs;
+
+const CLIPPY_TOML: &'static str = "clippy.toml";
+
+const DOT_CLANG_TIDY: &'static str = ".clang-tidy";
+const PYPROJECT_TOML: &'static str = "pyproject.toml";
 
 pub fn run() -> CheckStatus {
     info!("checking HRI05 (Use static source-code analyzers)");
+    let mut results: [CheckStatus; 3] = [CheckStatus::NotApplicable; 3];
 
-    info!("HRI05 not implemented");
-    CheckStatus::NotImplemented
+    results[0] = have_clangtidy();
+    results[1] = have_clippy();
+    results[2] = have_ruff();
+
+    let mut incomplete = false;
+
+    for i in 0..results.len() {
+        match results[i] {
+            CheckStatus::Success => {
+                info!("HRI05 passed ✅");
+                return CheckStatus::Success;
+            }
+            CheckStatus::Incomplete => {
+                incomplete = true;
+            }
+            _ => {}
+        }
+    }
+
+    match incomplete {
+        true => {
+            warn!("HRI05 incomplete ⏳");
+            CheckStatus::Incomplete
+        }
+        false => {
+            error!("no linter config found");
+            error!("HRI05 failed ❌");
+            CheckStatus::Failure
+        }
+    }
+}
+
+fn have_clangtidy() -> CheckStatus {
+    if file_exists(DOT_CLANG_TIDY) {
+        info!("found {}", DOT_CLANG_TIDY);
+        CheckStatus::Success
+    } else {
+        CheckStatus::Failure
+    }
+}
+
+fn have_clippy() -> CheckStatus {
+    if file_exists(CLIPPY_TOML) {
+        info!("found {}", CLIPPY_TOML);
+        CheckStatus::Success
+    } else {
+        CheckStatus::Failure
+    }
+}
+
+fn have_ruff() -> CheckStatus {
+    match fs::read_to_string(PYPROJECT_TOML) {
+        Ok(content) => {
+            info!("found {}", PYPROJECT_TOML);
+
+            if content.contains("[tool.ruff.lint]") {
+                info!("found ruff linter config");
+                CheckStatus::Success
+            } else {
+                warn!("ruff linter config not found");
+                CheckStatus::Incomplete
+            }
+        }
+        Err(_) => CheckStatus::Failure,
+    }
+}
+
+fn file_exists(path: &str) -> bool {
+    fs::metadata(path).is_ok()
 }
