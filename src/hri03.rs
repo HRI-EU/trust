@@ -62,11 +62,6 @@ pub fn run() -> CheckStatus {
         CheckStatus::NotApplicable => {
             info!("HRI03 not applicable")
         }
-
-        // should not happen
-        CheckStatus::NotImplemented => {
-            info!("HRI03 not implemented")
-        }
     }
 
     status

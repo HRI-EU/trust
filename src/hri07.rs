@@ -47,7 +47,7 @@ pub fn run() -> CheckStatus {
 
     // We use regular expressions instead of a simple string comparison in order to handle:
     //    * varying hostnames
-    //    * security-component inclusions that have been commented out
+    //    * component inclusions that have been commented out
 
     let re = Regex::new(r"^\s+-\s+component:\s[A-Za-z0-9._\-/$]+/[TECHtech_TEAMteam]+/ci/secrets-detection/(secrets-detection@.+$)").unwrap();
 
@@ -67,7 +67,7 @@ pub fn run() -> CheckStatus {
                     }
                 }
 
-                error!("not found: secrets-detection");
+                error!("CI component 'secrets-detection' not found");
                 error!("HRI07 failed ❌");
                 CheckStatus::Failure
             }

@@ -58,9 +58,6 @@ pub fn run(results: &[CheckStatus]) {
             CheckStatus::NotApplicable => {
                 info!("summary: HRI{id:02} not applicable");
             }
-            CheckStatus::NotImplemented => {
-                info!("summary: HRI{id:02} not implemented");
-            }
         }
     }
 

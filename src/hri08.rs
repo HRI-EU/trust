@@ -33,12 +33,55 @@
 //  SPDX-License-Identifier: BSD-3-Clause
 //
 
-use log::info;
 use crate::CheckStatus;
+use log::{error, info};
+use regex::Regex;
+use std::fs;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+
+const CONFIGFILE: &'static str = ".gitlab-ci.yml";
 
 pub fn run() -> CheckStatus {
     info!("checking HRI08 (License compliance)");
 
-    info!("HRI08 not implemented");
-    CheckStatus::NotImplemented
+    // We use regular expressions instead of a simple string comparison in order to handle:
+    //    * varying hostnames
+    //    * component inclusions that have been commented out
+
+    let re = Regex::new(r"^\s+-\s+component:\s[A-Za-z0-9._\-/$]+/[TECHtech_TEAMteam]+/ci/autocompliance/(autocompliance@.+$)").unwrap();
+
+    match fs::metadata(CONFIGFILE) {
+        Ok(_) => match File::open(CONFIGFILE) {
+            Ok(fh) => {
+                let lines = BufReader::new(fh).lines();
+
+                for line in lines.map_while(Result::ok) {
+                    match re.captures( &line ) {
+                        Some(caps) => {
+                            info!("found: {}", caps.get(1).unwrap().as_str() );
+                            info!("HRI08 passed ✅");
+                            return CheckStatus::Success;
+                        }
+                        None => {}
+                    }
+                }
+
+                error!("CI component 'autocompliance' not found");
+                error!("HRI08 failed ❌");
+                CheckStatus::Failure
+            }
+            Err(e) => {
+                error!("{}", e);
+                error!("{}: unable to read file", CONFIGFILE);
+                error!("HRI08 failed ❌");
+                CheckStatus::Failure
+            }
+        },
+        Err(_) => {
+            error!("no CI/CD pipelines found");
+            error!("HRI08 failed ❌");
+            CheckStatus::Failure
+        }
+    }
 }

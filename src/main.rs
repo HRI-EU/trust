@@ -62,7 +62,6 @@ enum CheckStatus {
     Incomplete,
     Failure,
     NotApplicable,
-    NotImplemented,
 }
 
 fn main() {
