@@ -97,122 +97,70 @@ pub fn run() -> CheckStatus {
     }
 }
 
-fn have_conan() -> CheckStatus {
-    let conanfile_py = file_exists(CONANFILE_PY);
-    let conanfile_txt = file_exists(CONANFILE_TXT);
-    let conan_lock = file_exists(CONAN_LOCK);
-
-    if conanfile_py {
-        info!("found {}", CONANFILE_PY);
-    }
-    if conanfile_txt {
-        info!("found {}", CONANFILE_TXT);
-    }
-    if conan_lock {
-        info!("found {}", CONAN_LOCK);
-    }
-
-    if conanfile_py || conanfile_txt {
-        if conan_lock {
-            return CheckStatus::Success;
-        }
-        warn!("lockfile missing: {}", CONAN_LOCK);
-        return CheckStatus::Incomplete;
-    }
-
-    CheckStatus::Failure
-}
-
 fn have_cargo() -> CheckStatus {
-    let cargo_toml = file_exists(CARGO_TOML);
-    let cargo_lock = file_exists(CARGO_LOCK);
-
-    if cargo_toml {
-        info!("found {}", CARGO_TOML);
-    }
-    if cargo_lock {
-        info!("found {}", CARGO_LOCK);
-    }
-
-    if cargo_toml {
-        if cargo_lock {
-            return CheckStatus::Success;
-        }
-        warn!("lockfile missing: {}", CARGO_LOCK);
-        return CheckStatus::Incomplete;
-    }
-
-    CheckStatus::Failure
+    have_one_config_one_lock( CARGO_TOML, CARGO_LOCK)
 }
+
+fn have_conan() -> CheckStatus {
+    have_two_config_one_lock( CONANFILE_PY, CONANFILE_TXT, CONAN_LOCK )
+}
+
 
 fn have_conda() -> CheckStatus {
-    let environment_yml = file_exists(ENVIRONMENT_YML);
-    let environment_yaml = file_exists(ENVIRONMENT_YAML);
-    let conda_lock = file_exists(CONDA_LOCK);
-
-    if environment_yml {
-        info!("found {}", ENVIRONMENT_YML);
-    }
-    if environment_yaml {
-        info!("found {}", ENVIRONMENT_YAML);
-    }
-    if conda_lock {
-        info!("found {}", CONDA_LOCK);
-    }
-
-    if environment_yml || environment_yaml {
-        if conda_lock {
-            return CheckStatus::Success;
-        }
-        warn!("lockfile missing: {}", CONDA_LOCK);
-        return CheckStatus::Incomplete;
-    }
-
-    CheckStatus::Failure
+    have_two_config_one_lock( ENVIRONMENT_YML, ENVIRONMENT_YAML, CONDA_LOCK )
 }
 
 fn have_npm() -> CheckStatus {
-    let package_json = file_exists(PACKAGE_JSON);
-    let package_lock_json = file_exists(PACKAGE_LOCK_JSON);
+    have_one_config_one_lock( PACKAGE_JSON, PACKAGE_LOCK_JSON)
+}
 
-    if package_json {
-        info!("found {}", PACKAGE_JSON);
+fn have_uv() -> CheckStatus {
+    have_two_config_one_lock( UV_TOML, PYPROJECT_TOML, UV_LOCK)
+}
+
+
+fn have_one_config_one_lock( config: &str, lock: &str ) -> CheckStatus {
+    let have_config = file_exists(config);
+    let have_lock = file_exists(lock);
+
+    if have_config {
+        info!("found {}", config);
     }
-    if package_lock_json {
-        info!("found {}", PACKAGE_LOCK_JSON);
+    if have_lock {
+        info!("found {}", lock);
     }
 
-    if package_json {
-        if package_lock_json {
+    if have_config {
+        if have_lock {
             return CheckStatus::Success;
         }
-        warn!("lockfile missing: {}", PACKAGE_LOCK_JSON);
+        warn!("lockfile missing: {}", lock);
         return CheckStatus::Incomplete;
     }
 
     CheckStatus::Failure
 }
 
-fn have_uv() -> CheckStatus {
-    let uv_toml = file_exists(UV_TOML);
-    let pyproject_toml = file_exists(PYPROJECT_TOML);
-    let uv_lock = file_exists(UV_LOCK);
+fn have_two_config_one_lock( config_a: &str, config_b: &str, lock: &str ) -> CheckStatus {
+    let have_config_a = file_exists(config_a);
+    let have_config_b = file_exists(config_b);
+    let have_lock = file_exists(lock);
 
-    if uv_toml {
-        info!("found {}", UV_TOML);
+    if have_config_a {
+        info!("found {}", config_a);
     }
-    if pyproject_toml {
-        info!("found {}", PYPROJECT_TOML);
+    if have_config_b {
+        info!("found {}", config_b);
     }
-    if uv_lock {
-        info!("found {}", UV_LOCK);
+    if have_lock {
+        info!("found {}", lock);
     }
 
-    if uv_toml || pyproject_toml {
-        if uv_lock {
+    if have_config_a || have_config_b {
+        if have_lock {
             return CheckStatus::Success;
         }
-        warn!("lockfile missing: {}", UV_LOCK);
+        warn!("lockfile missing: {}", lock);
         return CheckStatus::Incomplete;
     }
 
