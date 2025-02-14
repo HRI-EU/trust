@@ -52,15 +52,21 @@ const PYPROJECT_TOML: &'static str = "pyproject.toml";
 const UV_TOML: &'static str = "uv.toml";
 const UV_LOCK: &'static str = "uv.lock";
 
+const PACKAGE_JSON: &'static str = "package.json";
+const PACKAGE_LOCK_JSON: &'static str = "package-lock.json";
+
+
+
 pub fn run() -> CheckStatus {
     info!("checking HRI09 (Use modern build/packaging system)");
 
-    let mut results: [CheckStatus; 4] = [CheckStatus::NotApplicable; 4];
+    let mut results: [CheckStatus; 5] = [CheckStatus::NotApplicable; 5];
 
-    results[0] = have_conan();
-    results[1] = have_cargo();
+    results[0] = have_cargo();
+    results[1] = have_conan();
     results[2] = have_conda();
-    results[3] = have_uv();
+    results[3] = have_npm();
+    results[4] = have_uv();
 
     let mut incomplete = false;
 
@@ -159,6 +165,28 @@ fn have_conda() -> CheckStatus {
             return CheckStatus::Success;
         }
         warn!("lockfile missing: {}", CONDA_LOCK);
+        return CheckStatus::Incomplete;
+    }
+
+    CheckStatus::Failure
+}
+
+fn have_npm() -> CheckStatus {
+    let package_json = file_exists(PACKAGE_JSON);
+    let package_lock_json = file_exists(PACKAGE_LOCK_JSON);
+
+    if package_json {
+        info!("found {}", PACKAGE_JSON);
+    }
+    if package_lock_json {
+        info!("found {}", PACKAGE_LOCK_JSON);
+    }
+
+    if package_json {
+        if package_lock_json {
+            return CheckStatus::Success;
+        }
+        warn!("lockfile missing: {}", PACKAGE_LOCK_JSON);
         return CheckStatus::Incomplete;
     }
 

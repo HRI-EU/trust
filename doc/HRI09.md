@@ -16,6 +16,7 @@ To manage all of the above automation tasks, use a modern build / packaging syst
 | Programming language | Tool            | Configfile                                                               | Lockfile                  |
 |----------------------|-----------------|--------------------------------------------------------------------------|---------------------------|
 | C, C++               | `conan`         | `conanfile.py` or `conanfile.txt`                                        | `conan.lock`              |
+| JavaScript           | `npm`           | `package.json`                                                           | `package-lock.json`       |
 | Python               | `conda` or `uv` | `environment.yml` or `environment.yaml` or `pyproject.toml` or `uv.toml` | `conda.lock` or `uv.lock` |
 | Rust                 | `cargo`         | `Cargo.toml`                                                             | `Cargo.lock`              |
 
@@ -32,6 +33,7 @@ At least one of the file combinations must exist:
 * `conanfile.txt` and `conan.lock`
 * `environment.yml` and `conda.lock`
 * `environment.yaml` and `conda.lock`
+* `package.json` and `package-lock.json`
 * `pyproject.toml` and `uv.lock`
 * `uv.toml` and `uv.lock`
 
@@ -40,4 +42,5 @@ At least one of the file combinations must exist:
 * [Conan website](https://conan.io)
 * [Conda website](https://docs.conda.io)
 * [Cargo website](https://doc.rust-lang.org/cargo)
+* [NPM website](https://github.com/npm/cli)
 * [Uv website](https://docs.astral.sh/uv)
