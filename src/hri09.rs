@@ -44,18 +44,23 @@ const CONAN_LOCK: &'static str = "conan.lock";
 const CARGO_TOML: &'static str = "Cargo.toml";
 const CARGO_LOCK: &'static str = "Cargo.lock";
 
-const UV_TOML: &'static str = "uv.toml";
+const CONDA_LOCK: &'static str = "conda.lock";
+
+const ENVIRONMENT_YML: &'static str = "environment.yml";
+const ENVIRONMENT_YAML: &'static str = "environment.yaml";
 const PYPROJECT_TOML: &'static str = "pyproject.toml";
+const UV_TOML: &'static str = "uv.toml";
 const UV_LOCK: &'static str = "uv.lock";
 
 pub fn run() -> CheckStatus {
     info!("checking HRI09 (Use modern build/packaging system)");
 
-    let mut results: [CheckStatus; 3] = [CheckStatus::NotApplicable; 3];
+    let mut results: [CheckStatus; 4] = [CheckStatus::NotApplicable; 4];
 
     results[0] = have_conan();
     results[1] = have_cargo();
-    results[2] = have_uv();
+    results[2] = have_conda();
+    results[3] = have_uv();
 
     let mut incomplete = false;
 
@@ -105,6 +110,7 @@ fn have_conan() -> CheckStatus {
         if conan_lock {
             return CheckStatus::Success;
         }
+        warn!("lockfile missing: {}", CONAN_LOCK);
         return CheckStatus::Incomplete;
     }
 
@@ -126,6 +132,33 @@ fn have_cargo() -> CheckStatus {
         if cargo_lock {
             return CheckStatus::Success;
         }
+        warn!("lockfile missing: {}", CARGO_LOCK);
+        return CheckStatus::Incomplete;
+    }
+
+    CheckStatus::Failure
+}
+
+fn have_conda() -> CheckStatus {
+    let environment_yml = file_exists(ENVIRONMENT_YML);
+    let environment_yaml = file_exists(ENVIRONMENT_YAML);
+    let conda_lock = file_exists(CONDA_LOCK);
+
+    if environment_yml {
+        info!("found {}", ENVIRONMENT_YML);
+    }
+    if environment_yaml {
+        info!("found {}", ENVIRONMENT_YAML);
+    }
+    if conda_lock {
+        info!("found {}", CONDA_LOCK);
+    }
+
+    if environment_yml || environment_yaml {
+        if conda_lock {
+            return CheckStatus::Success;
+        }
+        warn!("lockfile missing: {}", CONDA_LOCK);
         return CheckStatus::Incomplete;
     }
 
@@ -151,6 +184,7 @@ fn have_uv() -> CheckStatus {
         if uv_lock {
             return CheckStatus::Success;
         }
+        warn!("lockfile missing: {}", UV_LOCK);
         return CheckStatus::Incomplete;
     }
 
