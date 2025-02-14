@@ -70,7 +70,9 @@ fn main() {
     Args::parse();
 
     show_splash();
-    run_checks();
+
+    let status = run_checks();
+    std::process::exit( status )
 }
 
 fn show_splash() {
@@ -89,7 +91,7 @@ fn show_splash() {
 }
 
 
-fn run_checks() {
+fn run_checks() -> i32 {
     let mut results: [CheckStatus; 9] = [ CheckStatus::NotApplicable; 9 ];
 
     info!("");
@@ -111,6 +113,6 @@ fn run_checks() {
     info!("");
     results[8] = hri09::run();
     info!("");
-    hri10::run( &results );
+    hri10::run( &results )
 }
 

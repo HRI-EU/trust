@@ -36,7 +36,7 @@
 use crate::CheckStatus;
 use log::{error, info};
 
-pub fn run(results: &[CheckStatus]) {
+pub fn run(results: &[CheckStatus]) -> i32 {
     info!("checking HRI10 (Obey HRI01-HRI-09 😊)");
 
     let mut success = true;
@@ -63,7 +63,13 @@ pub fn run(results: &[CheckStatus]) {
 
     match success
     {
-        true => info!("summary: HRI10 passed ✅"),
-        false => error!("summary: HRI10 failed ❌")
+        true => {
+            info!("summary: HRI10 passed ✅");
+            0 // will be used as program exit code
+        },
+        false => {
+            error!("summary: HRI10 failed ❌");
+            1 // will be used as program exit code
+        }
     }
 }

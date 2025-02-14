@@ -13,5 +13,5 @@ Aim to make all checks HRI01 through HRI09 pass.
 
 The check HRI10 is successful if HRI01 through HRI09 are successful.
 
-In the future, the success state of HRI10 will correspond to the overall exit
-code of the `trust` utility. For now, it always returns `0`.
+The success state of HRI10 is the overall exit code of the `trust`
+utility, which is returned to the shell.
