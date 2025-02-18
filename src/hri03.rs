@@ -77,7 +77,7 @@ fn worker(path: &str) -> CheckStatus {
             WalkDir::new(path)
                 .sort_by_file_name()
                 .into_iter()
-                .filter_entry(|e| is_of_interest(e))
+                .filter_entry( is_of_interest)
                 .filter_map(|v| v.ok())
                 .for_each(|e| {
                     if e.file_type().is_file() {
