@@ -53,8 +53,8 @@ pub fn run() -> CheckStatus {
 
     let mut incomplete = false;
 
-    for i in 0..results.len() {
-        match results[i] {
+    for item in &results {
+        match item {
             CheckStatus::Success => {
                 info!("HRI04 passed ✅");
                 return CheckStatus::Success;

@@ -41,9 +41,9 @@ pub fn run(results: &[CheckStatus]) -> i32 {
 
     let mut success = true;
 
-    for i in 0..results.len() {
+    for (i, item ) in results.iter().enumerate() {
         let id = i + 1;
-        match results[i] {
+        match item {
             CheckStatus::Success => {
                 info!("summary: HRI{id:02} passed ✅");
             }
