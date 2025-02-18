@@ -110,7 +110,7 @@ fn have_rustfmt() -> CheckStatus {
         info!("found {}", RUSTFMT_TOML);
         CheckStatus::Success
     } else if file_exists(DOT_RUSTFMT_TOML) {
-        info!("found {}", RUSTFMT_TOML);
+        info!("found {}", DOT_RUSTFMT_TOML);
         CheckStatus::Success
     } else {
         CheckStatus::Failure
