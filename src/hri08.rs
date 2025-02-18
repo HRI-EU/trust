@@ -57,13 +57,10 @@ pub fn run() -> CheckStatus {
                 let lines = BufReader::new(fh).lines();
 
                 for line in lines.map_while(Result::ok) {
-                    match re.captures( &line ) {
-                        Some(caps) => {
-                            info!("found: {}", caps.get(1).unwrap().as_str() );
-                            info!("HRI08 passed ✅");
-                            return CheckStatus::Success;
-                        }
-                        None => {}
+                    if let Some(caps) = re.captures(&line) {
+                        info!("found: {}", caps.get(1).unwrap().as_str());
+                        info!("HRI08 passed ✅");
+                        return CheckStatus::Success;
                     }
                 }
 
