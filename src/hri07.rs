@@ -40,7 +40,7 @@ use std::fs;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-const CONFIGFILE: &'static str = ".gitlab-ci.yml";
+const CONFIGFILE: &str = ".gitlab-ci.yml";
 
 pub fn run() -> CheckStatus {
     info!("checking HRI07 (Use security-components)");

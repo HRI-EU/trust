@@ -37,10 +37,10 @@ use crate::CheckStatus;
 use log::{error, info, warn};
 use std::fs;
 
-const DOT_CLANG_FORMAT: &'static str = ".clang-format";
-const RUSTFMT_TOML: &'static str = "rustfmt.toml";
-const DOT_RUSTFMT_TOML: &'static str = ".rustfmt.toml";
-const PYPROJECT_TOML: &'static str = "pyproject.toml";
+const DOT_CLANG_FORMAT: &str = ".clang-format";
+const RUSTFMT_TOML: &str = "rustfmt.toml";
+const DOT_RUSTFMT_TOML: &str = ".rustfmt.toml";
+const PYPROJECT_TOML: &str = "pyproject.toml";
 
 pub fn run() -> CheckStatus {
     info!("checking HRI04 (Strive for codestyle-consistency)");

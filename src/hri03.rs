@@ -39,7 +39,7 @@ use std::fs;
 use std::str;
 use walkdir::{DirEntry, WalkDir};
 
-const FILE_EXTENSIONS: [&'static str; 15] = [
+const FILE_EXTENSIONS: [&str; 15] = [
     ".bash", ".c", ".cpp", ".go", ".h", ".hpp", ".hxx", ".inc", ".js", ".m", ".py", ".rs", ".sh",
     ".ts", ".tsx",
 ];

@@ -37,10 +37,10 @@ use crate::CheckStatus;
 use log::{error, info, warn};
 use std::fs;
 
-const CLIPPY_TOML: &'static str = "clippy.toml";
+const CLIPPY_TOML: &str = "clippy.toml";
 
-const DOT_CLANG_TIDY: &'static str = ".clang-tidy";
-const PYPROJECT_TOML: &'static str = "pyproject.toml";
+const DOT_CLANG_TIDY: &str = ".clang-tidy";
+const PYPROJECT_TOML: &str = "pyproject.toml";
 
 pub fn run() -> CheckStatus {
     info!("checking HRI05 (Use static source-code analyzers)");

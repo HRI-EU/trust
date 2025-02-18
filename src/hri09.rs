@@ -37,23 +37,23 @@ use crate::CheckStatus;
 use log::{error, info, warn};
 use std::fs;
 
-const CONANFILE_PY: &'static str = "conanfile.py";
-const CONANFILE_TXT: &'static str = "conanfile.txt";
-const CONAN_LOCK: &'static str = "conan.lock";
+const CONANFILE_PY: &str = "conanfile.py";
+const CONANFILE_TXT: &str = "conanfile.txt";
+const CONAN_LOCK: &str = "conan.lock";
 
-const CARGO_TOML: &'static str = "Cargo.toml";
-const CARGO_LOCK: &'static str = "Cargo.lock";
+const CARGO_TOML: &str = "Cargo.toml";
+const CARGO_LOCK: &str = "Cargo.lock";
 
-const CONDA_LOCK: &'static str = "conda.lock";
+const CONDA_LOCK: &str = "conda.lock";
 
-const ENVIRONMENT_YML: &'static str = "environment.yml";
-const ENVIRONMENT_YAML: &'static str = "environment.yaml";
-const PYPROJECT_TOML: &'static str = "pyproject.toml";
-const UV_TOML: &'static str = "uv.toml";
-const UV_LOCK: &'static str = "uv.lock";
+const ENVIRONMENT_YML: &str = "environment.yml";
+const ENVIRONMENT_YAML: &str = "environment.yaml";
+const PYPROJECT_TOML: &str = "pyproject.toml";
+const UV_TOML: &str = "uv.toml";
+const UV_LOCK: &str = "uv.lock";
 
-const PACKAGE_JSON: &'static str = "package.json";
-const PACKAGE_LOCK_JSON: &'static str = "package-lock.json";
+const PACKAGE_JSON: &str = "package.json";
+const PACKAGE_LOCK_JSON: &str = "package-lock.json";
 
 
 

@@ -37,7 +37,7 @@ use log::{error, info};
 use std::fs;
 use crate::CheckStatus;
 
-const CONFIGFILE: &'static str = ".gitlab-ci.yml";
+const CONFIGFILE: &str = ".gitlab-ci.yml";
 
 pub fn run() -> CheckStatus {
     info!("checking HRI06 (Use CI/CD pipelines)");
