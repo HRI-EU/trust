@@ -12,4 +12,4 @@ patchlevel       = 0
 
 docTool          = ''
 
-install          = [ ( 'target/release/trust', 'bin/trust' ) ]
+installMatching  = [ ( 'target/release', 'trust', 'bin/${MAKEFILE_PLATFORM}' ) ]
