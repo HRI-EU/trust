@@ -48,6 +48,7 @@ const CONDA_LOCK: &str = "conda.lock";
 
 const ENVIRONMENT_YML: &str = "environment.yml";
 const ENVIRONMENT_YAML: &str = "environment.yaml";
+const POETRY_LOCK: &str = "poetry.lock";
 const PYPROJECT_TOML: &str = "pyproject.toml";
 const UV_TOML: &str = "uv.toml";
 const UV_LOCK: &str = "uv.lock";
@@ -66,7 +67,7 @@ pub fn run() -> CheckStatus {
     results[1] = have_conan();
     results[2] = have_conda();
     results[3] = have_npm();
-    results[4] = have_uv();
+    results[4] = have_poetry_or_uv();
 
     let mut incomplete = false;
 
@@ -90,7 +91,6 @@ pub fn run() -> CheckStatus {
             CheckStatus::Incomplete
     }
         false => {
-            error!("none found");
             error!("HRI09 failed ❌");
             CheckStatus::Failure
         }
@@ -114,10 +114,9 @@ fn have_npm() -> CheckStatus {
     have_one_config_one_lock( PACKAGE_JSON, PACKAGE_LOCK_JSON)
 }
 
-fn have_uv() -> CheckStatus {
-    have_two_config_one_lock( UV_TOML, PYPROJECT_TOML, UV_LOCK)
+fn have_poetry_or_uv() -> CheckStatus {
+    have_two_config_two_lock( PYPROJECT_TOML, UV_TOML, POETRY_LOCK, UV_LOCK)
 }
-
 
 fn have_one_config_one_lock( config: &str, lock: &str ) -> CheckStatus {
     let have_config = file_exists(config);
@@ -161,6 +160,36 @@ fn have_two_config_one_lock( config_a: &str, config_b: &str, lock: &str ) -> Che
             return CheckStatus::Success;
         }
         warn!("lockfile missing: {}", lock);
+        return CheckStatus::Incomplete;
+    }
+
+    CheckStatus::Failure
+}
+
+fn have_two_config_two_lock(config_a: &str, config_b: &str, lock_a: &str, lock_b: &str ) -> CheckStatus {
+    let have_config_a = file_exists(config_a);
+    let have_config_b = file_exists(config_b);
+    let have_lock_a = file_exists(lock_a);
+    let have_lock_b = file_exists(lock_b);
+
+    if have_config_a {
+        info!("found {}", config_a);
+    }
+    if have_config_b {
+        info!("found {}", config_b);
+    }
+    if have_lock_a {
+        info!("found {}", lock_a);
+    }
+    if have_lock_b {
+        info!("found {}", lock_b);
+    }
+
+    if have_config_a || have_config_b {
+        if have_lock_a || have_lock_b {
+            return CheckStatus::Success;
+        }
+        warn!("lockfile missing: {} or {}", lock_a, lock_b );
         return CheckStatus::Incomplete;
     }
 
