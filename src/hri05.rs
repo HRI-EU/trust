@@ -101,7 +101,7 @@ fn have_ruff() -> CheckStatus {
         Ok(content) => {
             info!("found {}", PYPROJECT_TOML);
 
-            if content.contains("[tool.ruff.lint]") {
+            if content.contains("[tool.ruff.lint") {
                 info!("found ruff linter config");
                 CheckStatus::Success
             } else {

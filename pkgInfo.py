@@ -8,8 +8,8 @@ envVars          = [ ('PATH', '${PROJECT_START_PATH}/${PROJECT_NAME}/${FULL_VERS
 
 usePatchlevels   = True
 
-patchlevel       = 0
+patchlevel       = 1
 
 docTool          = ''
 
-install          = [ ( 'target/release/trust', 'bin/trust' ) ]
+installMatching  = [ ( 'target/release', 'trust', 'bin/${MAKEFILE_PLATFORM}' ) ]
