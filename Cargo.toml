@@ -1,6 +1,6 @@
 [package]
 name = "trust"
-version = "1.0.1"
+version = "1.0.2"
 edition = "2021"     # language standard, "2024" will be released soon
 authors = ["Marijke Stein <marijke.stein@honda-ri.de>"]
 license = "BSD-3-Clause"
