@@ -1,0 +1,31 @@
+---
+default:
+    interruptible: true
+
+.required_parameters:
+    before_script:
+        - 'test -n ${BASE_IMAGE_TAG} && echo "BASE_IMAGE_TAG: $BASE_IMAGE_TAG"'
+        - 'test -n ${TAG} && echo "TAG: $TAG"'
+        - 'test -n ${DOCKERFILE} && echo "DOCKERFILE: ${DOCKERFILE}"'
+        - 'test -n ${DESTINATION} && echo "DESTINATION: ${DESTINATION}"'
+
+build:
+    image:
+        name: package-cache.honda-ri.de/kaniko-project/executor:debug
+        entrypoint: [ "" ]
+    before_script:
+        - !reference [ .required_parameters, before_script ]
+        - mkdir ./etc
+        - echo "${SSL_ROOT_CA_CERT}" > ./etc/HRI-CA_cert.crt
+        - cp ./etc/HRI-CA_cert.crt /kaniko/ssl/certs/ca-certificates.crt
+        - mkdir -p /kaniko/.docker
+        - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    script:
+        - >-
+          /kaniko/executor
+          --context ${CI_PROJECT_DIR}
+          --dockerfile ${DOCKERFILE}
+          --build-arg "FROM_IMAGE_VERSION=${BASE_IMAGE_TAG}-${CI_COMMIT_SHA}"
+          --destination ${DESTINATION}:${CI_COMMIT_BRANCH}
+    needs: []
+

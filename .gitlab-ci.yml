@@ -1,4 +1,33 @@
+#
+# GitLab CI/CD configuration
+#
+
+
 include:
   - component: $CI_SERVER_FQDN/tech_team/ci/autocompliance/autocompliance@~latest
   - component: $CI_SERVER_FQDN/tech_team/ci/secrets-detection/secrets-detection@~latest
   - component: $CI_SERVER_FQDN/tech_team/ci/trust/trust@~latest
+
+
+default:
+  interruptible: true
+
+
+.container_builds:
+  stage: build
+  trigger:
+    include: .gitlab/templates/build_container.yml
+    forward:
+      yaml_variables: true
+      pipeline_variables: true
+    strategy: depend
+
+
+ubuntu2204-buildenv:
+  variables:
+    DESTINATION: $CI_REGISTRY_IMAGE/ubuntu2204-buildenv
+    DOCKERFILE: ./images/ubuntu2204-buildenv/Dockerfile
+    TAG: "1.0"
+    BASE_IMAGE_TAG: "1.3"
+  extends: .container_builds
+
