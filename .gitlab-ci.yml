@@ -31,3 +31,12 @@ ubuntu2204-buildenv:
     BASE_IMAGE_TAG: "1.3"
   extends: .container_builds
 
+
+ubuntu2204:
+  stage: build
+  image: $CI_REGISTRY_IMAGE/ubuntu2204-buildenv:$CI_COMMIT_BRANCH
+  needs: [ ubuntu2204-buildenv ]
+  script:
+    - source "${HOME}/.cargo/env"
+    - cargo build --release
+
