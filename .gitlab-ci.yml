@@ -7,6 +7,7 @@ include:
   - component: $CI_SERVER_FQDN/tech_team/ci/autocompliance/autocompliance@~latest
   - component: $CI_SERVER_FQDN/tech_team/ci/secrets-detection/secrets-detection@~latest
   - component: $CI_SERVER_FQDN/tech_team/ci/trust/trust@~latest
+  - component: $CI_SERVER_FQDN/tech_team/ci/create-release/create-release@~latest
 
 
 default:
@@ -38,6 +39,10 @@ alpine321-build:
   needs: [ alpine321-env ]
   script:
     - cargo build --release
+  artifacts:
+    name: "alpine321"
+    paths:
+      - target/release/trust
 
 
 alpine321-selftest:
@@ -63,6 +68,10 @@ ubuntu2204-build:
   needs: [ ubuntu2204-env ]
   script:
     - cargo build --release
+  artifacts:
+    name: "ubuntu2204"
+    paths:
+      - target/release/trust
 
 
 ubuntu2204-selftest:
