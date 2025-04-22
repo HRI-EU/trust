@@ -14,5 +14,3 @@ RUN apt-get update && \
 
 USER hri
 
-
-# EOF

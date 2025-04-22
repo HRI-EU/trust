@@ -27,9 +27,19 @@ alpine321-buildenv:
   variables:
     DESTINATION: $CI_REGISTRY_IMAGE/alpine321-buildenv
     DOCKERFILE: ./images/alpine321-buildenv/Dockerfile
-    TAG: "1.0"
-    BASE_IMAGE_TAG: "56-AlpineLinux "
+    TAG: "$CI_COMMIT_BRANCH"
+    BASE_IMAGE_TAG: "1.0.0"
   extends: .container_builds
+
+
+alpine321:
+  stage: build
+  image: $CI_REGISTRY_IMAGE/alpine321-buildenv:$CI_COMMIT_BRANCH
+  needs: [ alpine321-buildenv ]
+  script:
+    - source "${HOME}/.cargo/env"
+    - cargo --version
+    - cargo build --release
 
 
 ubuntu2204-buildenv:
