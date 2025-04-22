@@ -23,6 +23,15 @@ default:
     strategy: depend
 
 
+alpine321-buildenv:
+  variables:
+    DESTINATION: $CI_REGISTRY_IMAGE/alpine321-buildenv
+    DOCKERFILE: ./images/alpine321-buildenv/Dockerfile
+    TAG: "1.0"
+    BASE_IMAGE_TAG: "56-AlpineLinux "
+  extends: .container_builds
+
+
 ubuntu2204-buildenv:
   variables:
     DESTINATION: $CI_REGISTRY_IMAGE/ubuntu2204-buildenv
