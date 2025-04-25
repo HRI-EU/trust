@@ -3,7 +3,7 @@
 #
 
 
-FROM dmz-gitlab.honda-ri.de:5050/tech_team/docker/ubuntu2204-hri-rustc:latest
+FROM dmz-gitlab.honda-ri.de:5050/tech_team/docker/ubuntu2204-hri-rustc:1.4.0
 
 USER root
 
