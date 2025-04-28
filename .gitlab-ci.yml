@@ -23,39 +23,52 @@ default:
     strategy: depend
 
 
-alpine321-buildenv:
+alpine321-env:
   variables:
-    DESTINATION: $CI_REGISTRY_IMAGE/alpine321-buildenv
-    DOCKERFILE: ./images/alpine321-buildenv/Dockerfile
+    DESTINATION: $CI_REGISTRY_IMAGE/alpine321-env
+    DOCKERFILE: ./images/alpine321-env/Dockerfile
     TAG: "$CI_COMMIT_BRANCH"
     BASE_IMAGE_TAG: "1.0.0"
   extends: .container_builds
 
 
-alpine321:
+alpine321-build:
   stage: build
-  image: $CI_REGISTRY_IMAGE/alpine321-buildenv:$CI_COMMIT_BRANCH
-  needs: [ alpine321-buildenv ]
+  image: $CI_REGISTRY_IMAGE/alpine321-env:$CI_COMMIT_BRANCH
+  needs: [ alpine321-env ]
   script:
-    - source "${HOME}/.cargo/env"
-    - cargo --version
     - cargo build --release
 
 
-ubuntu2204-buildenv:
+alpine321-selftest:
+  stage: test
+  image: $CI_REGISTRY_IMAGE/alpine321-env:$CI_COMMIT_BRANCH
+  needs: [ alpine321-build ]
+  script:
+      - ./target/release/trust
+
+
+ubuntu2204-env:
   variables:
-    DESTINATION: $CI_REGISTRY_IMAGE/ubuntu2204-buildenv
-    DOCKERFILE: ./images/ubuntu2204-buildenv/Dockerfile
+    DESTINATION: $CI_REGISTRY_IMAGE/ubuntu2204-env
+    DOCKERFILE: ./images/ubuntu2204-env/Dockerfile
     TAG: "$CI_COMMIT_BRANCH"
     BASE_IMAGE_TAG: "1.4.0"
   extends: .container_builds
 
 
-ubuntu2204:
+ubuntu2204-build:
   stage: build
-  image: $CI_REGISTRY_IMAGE/ubuntu2204-buildenv:$CI_COMMIT_BRANCH
-  needs: [ ubuntu2204-buildenv ]
+  image: $CI_REGISTRY_IMAGE/ubuntu2204-env:$CI_COMMIT_BRANCH
+  needs: [ ubuntu2204-env ]
   script:
-    - source "${HOME}/.cargo/env"
     - cargo build --release
+
+
+ubuntu2204-selftest:
+  stage: test
+  image: $CI_REGISTRY_IMAGE/ubuntu2204-env:$CI_COMMIT_BRANCH
+  needs: [ ubuntu2204-build ]
+  script:
+    - ./target/release/trust
 

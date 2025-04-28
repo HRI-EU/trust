@@ -3,7 +3,7 @@
 #
 
 
-FROM dmz-gitlab.honda-ri.de:5050/tech_team/docker/alpine321-hri-rustc:1.0.0
+FROM dmz-gitlab.honda-ri.de:5050/tech_team/docker/alpine321-hri-minimal:1.0.0
 
 USER root
 
@@ -16,8 +16,13 @@ RUN echo "nameserver 127.0.0.11"   >> /etc/resolv.conf && \
     echo "172.26.0.188 package-cache"             >> /etc/hosts && \
     echo "https://package-cache.honda-ri.de/repository/alpine-proxy/v3.21/main" > /etc/apk/repositories
 
-RUN apk add --no-cache --no-check-certificate --allow-untrusted \
-        openssl openssl-dev pkgconfig
+RUN apk add --no-cache --no-check-certificate --allow-untrusted --update \
+        build-base cargo git openssl openssl-dev pkgconfig
 
 USER hri
+
+# Newer Git versions complain if the current user (who invokes git on commandline)
+# is not the owner of the working tree, leading to this error:
+# "repository path ... is not owned by current user; class=Config (7); code=Owner (-36)"
+RUN git config --global --add safe.directory '*'
 
