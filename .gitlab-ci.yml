@@ -67,6 +67,8 @@ ubuntu2204-build:
   image: $CI_REGISTRY_IMAGE/ubuntu2204-env:$CI_COMMIT_BRANCH
   needs: [ ubuntu2204-env ]
   script:
+    - source "${HOME}/.cargo/env"
+    - cargo --version
     - cargo build --release
   artifacts:
     name: "ubuntu2204"
