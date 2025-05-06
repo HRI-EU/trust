@@ -78,7 +78,9 @@ ubuntu2204-build:
 
 ubuntu2204-selftest:
   stage: test
-  image: $CI_REGISTRY_IMAGE/ubuntu2204-env:$CI_COMMIT_BRANCH
+  # For the selftest, Cargo or Rust crates are not needed. All essential libraries
+  # are already included in the main-image. Therefore, we use the base image directly.
+  image: $CI_SERVER_FQDN:5050/tech_team/docker/ubuntu2204-hri-main:1.4.0
   needs: [ ubuntu2204-build ]
   script:
     - ./target/release/trust
