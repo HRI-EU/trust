@@ -1,4 +1,87 @@
+#
+# GitLab CI/CD configuration
+#
+
+
 include:
   - component: $CI_SERVER_FQDN/tech_team/ci/autocompliance/autocompliance@~latest
   - component: $CI_SERVER_FQDN/tech_team/ci/secrets-detection/secrets-detection@~latest
   - component: $CI_SERVER_FQDN/tech_team/ci/trust/trust@~latest
+  - component: $CI_SERVER_FQDN/tech_team/ci/create-release/create-release@~latest
+
+
+default:
+  interruptible: true
+
+
+.container_builds:
+  stage: build
+  trigger:
+    include: .gitlab/templates/build_container.yml
+    forward:
+      yaml_variables: true
+      pipeline_variables: true
+    strategy: depend
+
+
+alpine321-env:
+  variables:
+    DESTINATION: $CI_REGISTRY_IMAGE/alpine321-env
+    DOCKERFILE: ./images/alpine321-env/Dockerfile
+    TAG: "$CI_COMMIT_BRANCH"
+    BASE_IMAGE_TAG: "1.0.0"
+  extends: .container_builds
+
+
+alpine321-build:
+  stage: build
+  image: $CI_REGISTRY_IMAGE/alpine321-env:$CI_COMMIT_BRANCH
+  needs: [ alpine321-env ]
+  script:
+    - cargo build --release
+  artifacts:
+    name: "alpine321"
+    paths:
+      - target/release/trust
+
+
+alpine321-selftest:
+  stage: test
+  image: $CI_REGISTRY_IMAGE/alpine321-env:$CI_COMMIT_BRANCH
+  needs: [ alpine321-build ]
+  script:
+      - ./target/release/trust
+
+
+ubuntu2204-env:
+  variables:
+    DESTINATION: $CI_REGISTRY_IMAGE/ubuntu2204-env
+    DOCKERFILE: ./images/ubuntu2204-env/Dockerfile
+    TAG: "$CI_COMMIT_BRANCH"
+    BASE_IMAGE_TAG: "1.4.0"
+  extends: .container_builds
+
+
+ubuntu2204-build:
+  stage: build
+  image: $CI_REGISTRY_IMAGE/ubuntu2204-env:$CI_COMMIT_BRANCH
+  needs: [ ubuntu2204-env ]
+  script:
+    - source "${HOME}/.cargo/env"
+    - cargo --version
+    - cargo build --release
+  artifacts:
+    name: "ubuntu2204"
+    paths:
+      - target/release/trust
+
+
+ubuntu2204-selftest:
+  stage: test
+  # For the selftest, Cargo or Rust crates are not needed. All essential libraries
+  # are already included in the main-image. Therefore, we use the base image directly.
+  image: $CI_SERVER_FQDN:5050/tech_team/docker/ubuntu2204-hri-main:1.4.0
+  needs: [ ubuntu2204-build ]
+  script:
+    - ./target/release/trust
+
