@@ -1,0 +1,5 @@
+[registries.packagecache]
+index = "sparse+https://package-cache.honda-ri.de/repository/cargo-proxy/"
+
+[source.crates-io]
+replace-with = "packagecache"

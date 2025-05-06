@@ -8,7 +8,7 @@ envVars          = [ ('PATH', '${PROJECT_START_PATH}/${PROJECT_NAME}/${FULL_VERS
 
 usePatchlevels   = True
 
-patchlevel       = 2
+patchlevel       = 3
 
 docTool          = ''
 
