@@ -24,10 +24,10 @@ default:
     strategy: depend
 
 
-alpine321-env:
+alpine321-buildenv:
   variables:
-    DESTINATION: $CI_REGISTRY_IMAGE/alpine321-env
-    DOCKERFILE: ./images/alpine321-env/Dockerfile
+    DESTINATION: $CI_REGISTRY_IMAGE/alpine321-buildenv
+    DOCKERFILE: ./images/alpine321-buildenv/Dockerfile
     TAG: "$CI_COMMIT_BRANCH"
     BASE_IMAGE_TAG: "1.0.0"
   extends: .container_builds
@@ -35,28 +35,51 @@ alpine321-env:
 
 alpine321-build:
   stage: build
-  image: $CI_REGISTRY_IMAGE/alpine321-env:$CI_COMMIT_BRANCH
-  needs: [ alpine321-env ]
+  image: $CI_REGISTRY_IMAGE/alpine321-buildenv:$CI_COMMIT_BRANCH
+  needs: [ alpine321-buildenv ]
   script:
     - cargo build --release
   artifacts:
-    name: "alpine321"
+    name: "trust-1.0.3-alpine321"
     paths:
       - target/release/trust
 
 
-alpine321-selftest:
-  stage: test
-  image: $CI_REGISTRY_IMAGE/alpine321-env:$CI_COMMIT_BRANCH
-  needs: [ alpine321-build ]
+alpine321-runtime:
+  stage: deploy
+  needs:
+    - job: alpine321-build
+      artifacts: true
+  image:
+      name: package-cache.honda-ri.de/kaniko-project/executor:debug
+      entrypoint: [ "" ]
+  before_script:
+      - mkdir ./etc
+      - echo "${SSL_ROOT_CA_CERT}" > ./etc/HRI-CA_cert.crt
+      - cp ./etc/HRI-CA_cert.crt /kaniko/ssl/certs/ca-certificates.crt
+      - mkdir -p /kaniko/.docker
+      - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
   script:
-      - ./target/release/trust
+      - >-
+        /kaniko/executor
+        --context ${CI_PROJECT_DIR}
+        --dockerfile ./images/alpine321-runtime/Dockerfile
+        --build-arg "FROM_IMAGE_VERSION=1.0.0-${CI_COMMIT_SHA}"
+        --destination $CI_REGISTRY_IMAGE/alpine321-runtime:1.0.3
 
 
-ubuntu2204-env:
+alpine321-selftest:
+  stage: deploy
+  image: $CI_REGISTRY_IMAGE/alpine321-runtime:1.0.3
+  needs: [ alpine321-runtime, alpine321-build ]
+  script:
+    - /opt/hri/trust/bin/trust
+
+
+ubuntu2204-buildenv:
   variables:
-    DESTINATION: $CI_REGISTRY_IMAGE/ubuntu2204-env
-    DOCKERFILE: ./images/ubuntu2204-env/Dockerfile
+    DESTINATION: $CI_REGISTRY_IMAGE/ubuntu2204-buildenv
+    DOCKERFILE: ./images/ubuntu2204-buildenv/Dockerfile
     TAG: "$CI_COMMIT_BRANCH"
     BASE_IMAGE_TAG: "1.4.0"
   extends: .container_builds
@@ -64,8 +87,8 @@ ubuntu2204-env:
 
 ubuntu2204-build:
   stage: build
-  image: $CI_REGISTRY_IMAGE/ubuntu2204-env:$CI_COMMIT_BRANCH
-  needs: [ ubuntu2204-env ]
+  image: $CI_REGISTRY_IMAGE/ubuntu2204-buildenv:$CI_COMMIT_BRANCH
+  needs: [ ubuntu2204-buildenv ]
   script:
     - source "${HOME}/.cargo/env"
     - cargo --version
